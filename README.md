@@ -1,5 +1,7 @@
 # ![HAProxy](https://github.com/haproxytech/kubernetes-ingress/raw/master/assets/images/haproxy-weblogo-210x49.png "HAProxy")
 
+[![CNTi cert](https://github.com/haproxytech/helm-charts/actions/workflows/cnti.yml/badge.svg)](https://github.com/haproxytech/helm-charts/actions/workflows/cnti.yml)
+
 ## HAProxy Helm Charts
 
 ![GitHub](https://img.shields.io/github/license/haproxytech/helm-charts)

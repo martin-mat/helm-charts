@@ -1,0 +1,9 @@
+# Values for the CNTi Test Suite run (.github/workflows/cnti.yml): limits next
+# to the chart's requests, and a ClusterIP service since nothing in the run
+# needs a node port.
+controller:
+  resources:
+    requests: {cpu: 250m, memory: 400Mi}
+    limits: {cpu: 1000m, memory: 800Mi}
+  service:
+    type: ClusterIP

@@ -1,0 +1,19 @@
+---
+# CNTi Test Suite configuration for the kubernetes-ingress chart in this
+# repository.
+config_version: "v2"
+common:
+  container_names:
+    # Retained image tags used by the rolling update, downgrade and rollback
+    # tests; the chart's appVersion is the tag under test.
+    - name: kubernetes-ingress-controller
+      rolling_update_test_tag: "3.2.14"
+      rolling_downgrade_test_tag: "3.1.14"
+      rolling_version_change_test_tag: "3.2.14"
+      rollback_from_tag: "3.2.14"
+deployments:
+  helm_dirs:
+    - name: haproxy-ingress
+      helm_directory: kubernetes-ingress
+      namespace: haproxy-cnti
+      helm_values: --values ci/cnti-values.yaml
