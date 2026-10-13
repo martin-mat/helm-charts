@@ -390,7 +390,7 @@ To override defaults, either pass a values file with `-f my-values.yaml` (recomm
 
 | Key | Description | Default |
 |---|---|---|
-| `controller.resources.requests` / `.limits` | CPU/memory requests and (optional) limits for the controller container. | `cpu: 250m`, `memory: 400Mi` (no limits) |
+| `controller.resources.requests` / `.limits` | CPU/memory requests and limits for the controller container. The memory limit also sizes HAProxy (66% of it) and the controller's `GOMEMLIMIT` (33%). | requests `cpu: 250m`, `memory: 400Mi`; limits `memory: 800Mi` (no CPU limit) |
 | `controller.autoscaling.enabled` | Enable HPA (Deployment only). | `false` |
 | `controller.autoscaling.minReplicas` / `.maxReplicas` | HPA bounds. | `2` / `20` |
 | `controller.autoscaling.targetCPUUtilizationPercentage` | CPU utilisation target. | `80` |
@@ -511,7 +511,7 @@ A Helm `post-install` / `pre-upgrade` hook Job that applies the controller's CRD
 | `crdjob.ttlSecondsAfterFinished` | Seconds after which the Job is garbage-collected. | `600` |
 | `crdjob.activeDeadlineSeconds` | Seconds the Job may stay active before Kubernetes terminates it and marks it `DeadlineExceeded`. Omitted when unset, so the Job runs without a deadline. | _unset_ |
 | `crdjob.nodeSelector` / `.tolerations` / `.affinity` | Scheduling controls for the Job pod. | `{}` / `[]` / `{}` |
-| `crdjob.resources.requests` / `.limits` | CPU/memory requests and (optional) limits for the Job container. | `cpu: 250m`, `memory: 400Mi` (no limits) |
+| `crdjob.resources.requests` / `.limits` | CPU/memory requests and limits for the Job container. | requests `cpu: 250m`, `memory: 400Mi`; limits `memory: 400Mi` (no CPU limit) |
 
 ### Extra Objects
 
