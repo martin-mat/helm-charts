@@ -1,0 +1,21 @@
+name: CNTi chart defaults
+on:
+  push:
+    branches: [cnti-defaults]
+permissions:
+  contents: read
+jobs:
+  suite:
+    strategy:
+      fail-fast: false
+      matrix:
+        tests: [cert]
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: lfn-cnti/testsuite-action@v1
+        with:
+          version: v2.2.0
+          cnf_config: cnti-testsuite.yaml
+          tests: ${{ matrix.tests }}
