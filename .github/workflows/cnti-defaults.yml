@@ -1,0 +1,35 @@
+name: CNTi chart defaults
+on:
+  push:
+    branches: [cnti-defaults, verify-memory-limit]
+permissions:
+  contents: read
+jobs:
+  suite:
+    strategy:
+      fail-fast: false
+      matrix:
+        tests: [cert]
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: lfn-cnti/testsuite-action@v1
+        with:
+          version: v2.2.0
+          cnf_config: cnti-testsuite.yaml
+          tests: ${{ matrix.tests }}
+  memory-sizing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: helm/kind-action@v1
+      - name: Install the chart with its defaults and read the memory sizing
+        run: |
+          helm install hp ./kubernetes-ingress --namespace hp --create-namespace --set controller.service.type=ClusterIP --wait --timeout 10m
+          kubectl get deploy -n hp -o jsonpath='{range .items[*].spec.template.spec.containers[*]}{.name}{" "}{.resources}{"\n"}{end}'
+          for p in $(kubectl get pods -n hp -l app.kubernetes.io/name=kubernetes-ingress -o name); do
+            echo "== $p"; kubectl logs -n hp "$p" | grep -m1 "Memory limit" || { kubectl logs -n hp "$p" | head -20; exit 1; }
+            kubectl exec -n hp "$p" -- sh -c 'cat /sys/fs/cgroup/memory.max; tr "\0" " " < /proc/$(pgrep -f haproxy-ingress-controller | head -1)/environ | tr " " "\n" | grep GOMEMLIMIT || true'
+          done
